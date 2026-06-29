@@ -1,3 +1,4 @@
+
 function getComputerChoice() {
     let randomNumber = Math.floor(Math.random() * 3)
     let computerChoice = ""
@@ -14,55 +15,86 @@ function getComputerChoice() {
 
     return computerChoice;
 }
-// console.log("Computer chooses: " + getComputerChoice())
-
-function getHumanChoice() {
-    return prompt("Rock, paper or scissors?")
-}
-// console.log("You chose: " + getHumanChoice())
-
-
 
 function playGame() {
     let humanScore = 0
     let computerScore = 0
     
-
+    function getWinner() {
+        if (humanScore === 5) {
+            roundMessage.textContent = "You win!";
+            disableButtons();
+        } else if (computerScore === 5) {
+            roundMessage.textContent = "Computer wins!";
+            disableButtons();
+        }
+    }
     function playRound(humanChoice, computerChoice) {
         let lcHumanChoice = humanChoice.toLowerCase()
         if (lcHumanChoice === computerChoice) {
-            console.log("You tied! Both of you chose " + computerChoice)
+            roundMessage.textContent = "You tied this round! Both of you chose " + computerChoice;
             return;
         } else if ((lcHumanChoice === "rock" && computerChoice === "paper") ||
                 (lcHumanChoice === "paper" && computerChoice === "scissors") ||
                 (lcHumanChoice === "scissors" && computerChoice === "rock")) {
-            console.log("Computer wins! " + computerChoice + " beats " + lcHumanChoice)
+            roundMessage.textContent = "Computer wins this round! " + computerChoice + " beats " + lcHumanChoice;
             computerScore++;
+            getWinner();
             return;
         } else if ((lcHumanChoice === "rock" && computerChoice === "scissors") ||
                 (lcHumanChoice === "paper" && computerChoice === "rock") ||
                 (lcHumanChoice === "scissors" && computerChoice === "paper")) {
-            console.log("You win! " + lcHumanChoice + " beats " + computerChoice)
+            roundMessage.textContent = "You win this round! " + lcHumanChoice + " beats " + computerChoice;
             humanScore++;
+            getWinner();
             return;
         }
+
     }
 
+    const gameBox = document.querySelector(".gameBox");
 
-    for (let i = 1; i <= 5; i++) {
-        const humanSelection = getHumanChoice();
-        const computerSelection = getComputerChoice();
-        playRound(humanSelection, computerSelection);
+    const rockButton = document.createElement("button");
+    rockButton.textContent = "Rock";
+    gameBox.appendChild(rockButton);
+
+    const paperButton = document.createElement("button");
+    paperButton.textContent = "Paper";
+    gameBox.appendChild(paperButton);
+
+    const scissorsButton = document.createElement("button");
+    scissorsButton.textContent = "Scissors";
+    gameBox.appendChild(scissorsButton);
+
+    const scoreboard = document.createElement("div");
+    scoreboard.textContent = humanScore + " - " + computerScore;
+    gameBox.appendChild(scoreboard);
+
+    const roundMessage = document.createElement("div");
+    gameBox.appendChild(roundMessage);
+
+    function disableButtons() {
+        rockButton.disabled = true;
+        paperButton.disabled = true;
+        scissorsButton.disabled = true;
     }
 
-    if (computerScore > humanScore) {
-        console.log("Computer wins " + computerScore + " to " + humanScore + "!")
-    } else if (computerScore < humanScore) {
-        console.log("You win " + humanScore + " to " + computerScore + "!")
-    } else {
-        console.log("It's a tie!")
-    }
+    const computerSelection = getComputerChoice();
+
+    rockButton.addEventListener("click", () => {
+        playRound("rock", getComputerChoice());
+        scoreboard.textContent = humanScore + " - " + computerScore;
+    })
+    paperButton.addEventListener("click", () => {
+        playRound("paper", getComputerChoice());
+        scoreboard.textContent = humanScore + " - " + computerScore;
+    })
+    scissorsButton.addEventListener("click", () => {
+        playRound("scissors", getComputerChoice());
+        scoreboard.textContent = humanScore + " - " + computerScore;
+    })
+
 }
 
-console.log(playGame())
+playGame();
 
